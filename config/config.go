@@ -15,8 +15,24 @@ var (
 	Port       string
 	JwtSignKey string
 	JwtExpTime int64 //token有效期
+	Username   string
+	Password   string
 )
 
+type ReturnData struct {
+	Status  int                    `json:"status"`
+	Message string                 `json:"message"`
+	Data    map[string]interface{} `json:"data"`
+}
+
+// 构造函数，给结构体赋默认值
+func NewReturnData() ReturnData {
+	returnData := ReturnData{}
+	returnData.Status = 200
+	data := map[string]interface{}{}
+	returnData.Data = data
+	return returnData
+}
 func initLogConfig(logLevel string) {
 	if logLevel == "debug" {
 		logrus.SetLevel(logrus.DebugLevel)
@@ -44,6 +60,13 @@ func init() {
 	viper.SetDefault("JWT_EXPIRE_TIME", 24*60*60) //24小时
 	JwtExpTime = viper.GetInt64("JWT_EXPIRE_TIME")
 
+	//配置用户名密码的默认值，生产环境是加密状态
+	viper.SetDefault("USERNAME", "admin")
+	viper.SetDefault("PASSWORD", "123456")
+
+	//获取用户名和密码配置
+	Username = viper.GetString("USERNAME")
+	Password = viper.GetString("PASSWORD")
 	//加载环境变量
 	viper.AutomaticEnv()
 	logLevel := viper.GetString("LOG_LEVEL") //获取程序配置

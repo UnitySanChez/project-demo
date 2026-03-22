@@ -5,6 +5,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"project-demo/config"
+	"project-demo/midderwares"
+	"project-demo/routers"
 	"project-demo/utils/logs"
 )
 
@@ -12,6 +14,7 @@ func main() {
 	//1. 初始化配置
 	//2.配置gin
 	r := gin.Default()
+	r.Use(midderwares.JWTAuth)
 	logs.Info(nil, "项目启动成功")
 	/*	//测试生产jwt token是否有用
 		ss, _ := jwtutil.GenToken("dddd")
@@ -29,6 +32,7 @@ func main() {
 			fmt.Println(claims)
 		}*/
 
+	routers.RegisterRouter(r)
 	r.Run(config.Port)
 
 }
