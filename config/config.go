@@ -49,26 +49,27 @@ func initLogConfig(logLevel string) {
 func init() {
 	// 初始化配置
 	logs.Debug(nil, "开始加载程序配置")
-	viper.SetDefault("LOG_LEVEL", "debug")
-	//获取端口号配置
-	viper.SetDefault("PORT", ":8081")
-	Port = viper.GetString("PORT")
-	//获取jwt加密的secret
-	viper.SetDefault("JWT_SIGN_KEY", "123456")
-	JwtSignKey = viper.GetString("JWT_SIGN_KEY")
-	//获取jwt有效期配置
-	viper.SetDefault("JWT_EXPIRE_TIME", 24*60*60) //24小时
-	JwtExpTime = viper.GetInt64("JWT_EXPIRE_TIME")
+	// 1. 最先加载环境变量
+	viper.AutomaticEnv()
 
-	//配置用户名密码的默认值，生产环境是加密状态
-	viper.SetDefault("USERNAME", "admin")
+	viper.SetDefault("LOG_LEVEL", "debug")
+	viper.SetDefault("PORT", ":8081")
+	viper.SetDefault("JWT_SIGN_KEY", "123456")
+	viper.SetDefault("JWT_EXPIRE_TIME", 24*60*60) //24小时
+
+	viper.SetDefault("USERNAME", "admin") //配置用户名密码的默认值，生产环境是加密状态
 	viper.SetDefault("PASSWORD", "123456")
 
+	//获取端口号配置
+	Port = viper.GetString("PORT")
+	//获取jwt加密的secret
+	JwtSignKey = viper.GetString("JWT_SIGN_KEY")
+	//获取jwt有效期配置
+	JwtExpTime = viper.GetInt64("JWT_EXPIRE_TIME")
 	//获取用户名和密码配置
 	Username = viper.GetString("USERNAME")
 	Password = viper.GetString("PASSWORD")
-	//加载环境变量
-	viper.AutomaticEnv()
+
 	logLevel := viper.GetString("LOG_LEVEL") //获取程序配置
 	initLogConfig(logLevel)
 
